@@ -1,0 +1,32 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: aks-docker-sample
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: aks-docker-sample
+    spec:
+      containers:
+      - name: aks-docker-sample
+        image: aksdockersample/aks-docker-sample:latest
+        ports:
+        - containerPort: 8181
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aks-docker-sample
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8181
+  selector:
+    app: aks-docker-sample
