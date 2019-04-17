@@ -28,7 +28,7 @@ jobs:
     displayName: Deploy job
     # can not w euse variables?
     dependsOn: MavenBuild
-    environment: 'SmartHotel'
+    environment: 'SmartHotel.notifications'
     strategy:
       runOnce:
         deploy:
