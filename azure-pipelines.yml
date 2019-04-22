@@ -23,26 +23,9 @@ jobs:
       displayName: 'Publish Artifacts: drop'
       inputs:
         PathtoPublish: '$(build.artifactstagingdirectory)'
-  
-  - job: Deploy
-    dependsOn: MavenBuild
-    steps:
-    - task: DownloadBuildArtifacts@0
-      displayName: 'Download Build Artifacts'
-      inputs:
-        artifactName: drop
-    - task: AzureWebApp@1
-      displayName: 'Azure Web App Deploy: LinuxJSEApp'
-      inputs:
-        azureSubscription: 'RMPM'
-        appType: webAppLinux
-        appName: linuxjse8
-        package: '$(build.artifactstagingdirectory)/**/*.jar'
-
-
+ 
   - deployment: Deployjob
     displayName: Deploy job
-    # can not w euse variables?
     dependsOn: MavenBuild
     environment: 'SmartHotel.notifications'
     strategy:
@@ -58,5 +41,5 @@ jobs:
             inputs:
               azureSubscription: 'RMPM'
               appType: webAppLinux
-#              appName: linuxjse8
-              package: '$(build.artifactstagingdirectory)/**/spring-petclinic-2.1.0.BUILD-SNAPSHOT.jar'
+              appName: linuxjse8
+              package: '$(build.artifactstagingdirectory)/**/*.jar'
