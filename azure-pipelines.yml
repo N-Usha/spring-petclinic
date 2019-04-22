@@ -34,7 +34,7 @@ jobs:
     - task: AzureWebApp@1
       displayName: 'Azure Web App Deploy: LinuxJSEApp'
       inputs:
-        azureSubscription: 'JavaSpring - Service Endpoint'
+        azureSubscription: 'RMPM'
         appType: webAppLinux
         appName: linuxjse8
         package: '$(build.artifactstagingdirectory)/**/*.jar'
