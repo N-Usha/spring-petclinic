@@ -42,5 +42,5 @@ jobs:
             inputs:
               azureSubscription: 'RMPM'
               appType: webAppLinux
-              appName: LinuxJSEApp
+              appName: linuxjse8
               package: '$(build.artifactstagingdirectory)/**/spring-petclinic-2.1.0.BUILD-SNAPSHOT.jar'
