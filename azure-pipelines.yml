@@ -27,7 +27,7 @@ jobs:
   - deployment: Deployjob
     displayName: Deploy job
     dependsOn: MavenBuild
-    environment: 'SmartHotel'
+    environment: 'Petclinic'
     strategy:
       runOnce:
         deploy:
