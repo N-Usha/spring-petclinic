@@ -43,3 +43,4 @@ jobs:
               appType: webAppLinux
               appName: my-app-jse
               package: '$(build.artifactstagingdirectory)/**/*.jar'
+              startUpCommand: 'mvn spring-boot:run'
