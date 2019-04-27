@@ -59,7 +59,7 @@ stages:
           - task: DownloadBuildArtifacts@0
             displayName: 'Download Pipeline Artifact'
             inputs:
-              buildType: 'current'
+              artifactName: drop
 
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: {{ webAppName }}'
@@ -67,4 +67,4 @@ stages:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               appName: $(webAppName)
-              package: '$(System.ArtifactsDirectory)/drop/**/target/*.?ar'
+              package: '$(build.artifactstagingdirectory)/**/target/*.?ar'
