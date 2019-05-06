@@ -60,6 +60,10 @@ stages:
             displayName: 'Download Pipeline Artifact'
             inputs:
               artifactName: drop
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: 'Rename-Item -Path $(build.artifactstagingdirectory)/**/target/*.jar -NewName $(build.artifactstagingdirectory)/**/target/app.jar'
 
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: {{ webAppName }}'
