@@ -15,7 +15,7 @@ variables:
   webAppName: 'linuxjseapp'
 
   # name of the pool to run this job in
-  poolName: 'suaggarPool01'  
+  poolName: 'UshaPool'  
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
