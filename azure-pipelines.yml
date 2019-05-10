@@ -27,24 +27,15 @@ stages:
   - job: MavenPackageAndPublishArtifacts
     displayName: Maven Package and Publish Artifacts
     pool:
-      name: $(poolName)
-      #vmImage: $(vmImageName)
+      vmImage: $(vmImageName)
     
     steps:
     - task: Maven@3
       displayName: 'Maven Package'
       inputs:
         mavenPomFile: 'pom.xml'
-
-    - task: CopyFiles@2
-      displayName: 'Copy Files to artifact staging directory'
-      inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)'
-        Contents: '**/target/*.?ar'
-        TargetFolder: $(Build.ArtifactStagingDirectory)
-
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish pipeline artifacts'
+    - upload: $(System.DefaultWorkingDirectory)/target/petclinic.jar
+      artifact: drop
 
 - stage: Deploy
   displayName: Deploy stage
@@ -55,17 +46,11 @@ stages:
     displayName: Deploy Linux Web App
     environment: 'development'
     pool: 
-      name: $(poolName)
-      #vmImage: $(vmImageName)
+      vmImage: $(vmImageName)
     strategy:
       runOnce:
         deploy:
           steps:
-          - task: DownloadBuildArtifacts@0
-            displayName: 'Download Pipeline Artifact'
-            inputs:
-              artifactName: drop
-        
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: {{ webAppName }}'
             inputs:
@@ -73,4 +58,3 @@ stages:
               appType: webAppLinux
               appName: $(webAppName)
               package: '$(build.artifactstagingdirectory)/**/target/*.?ar'
-              startUpCommand: java -jar "/home/site/wwwroot/spring-petclinic-2.1.0.BUILD-SNAPSHOT.jar" –site.port=80
