@@ -63,9 +63,16 @@ stages:
             inputs:
               buildType: 'current'
 
+          - task: AzureRMWebAppDeployment@4
+            displayName: Azure App Service Deploy
+            inputs:
+              azureSubscription: $(azureSubscription)
+              WebAppName: $(webAppName)
+
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: JavaSpring'
             inputs:
               azureSubscription: $(azureSubscription)
               appName: $(webAppName)
               package: '$(System.ArtifactsDirectory)/drop/**/target/*.?(war|jar)'
+          
