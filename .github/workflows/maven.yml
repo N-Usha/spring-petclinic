@@ -1,4 +1,4 @@
-name: Java CI CD to App service
+name: Java CI CD to Java App service 
 
 on: [push,pull_request]
 
