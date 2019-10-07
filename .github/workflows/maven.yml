@@ -22,5 +22,5 @@ jobs:
     - uses: azure/webapps-deploy@v1
       with: 
         app-name: JavaSpringPetclinic  # Replace with your app name
-        publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Define secret variable in repository settings as per action documentation
+        publish-profile: ${{ secrets.jasonpublishprofile }} # Define secret variable in repository settings as per action documentation
         package: '${{ github.workspace }}/target/*.jar'
