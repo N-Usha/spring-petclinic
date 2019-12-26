@@ -49,7 +49,7 @@ jobs:
             inputs:
               targetType: 'inline'
               script: |
-                java -jar '$(Pipeline.Workspace)/drop/**/target/*.jar'
+                sudo java -jar '$(Pipeline.Workspace)/drop/**/target/*.jar'
 
           # - task: IISWebAppDeploymentOnMachineGroup@0
           #   displayName: 'Deploy application to Website'
