@@ -34,7 +34,7 @@ jobs:
     environment:
       name:  VMenv
       resourceType: VirtualMachine
-      tags: web
+      tags: web, linux
     strategy:
       rolling:
         maxParallel: 2  #for percentages, mention as x%
@@ -45,11 +45,17 @@ jobs:
           - script: echo initialize, cleanup, backup, install certs
         deploy:
           steps:
-          - task: IISWebAppDeploymentOnMachineGroup@0
-            displayName: 'Deploy application to Website'
+          - task: Bash@3
             inputs:
-              WebSiteName: 'Default Web Site'
-              Package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
+              targetType: 'inline'
+              script: |
+                java -jar '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
+
+          # - task: IISWebAppDeploymentOnMachineGroup@0
+          #   displayName: 'Deploy application to Website'
+          #   inputs:
+          #     WebSiteName: 'Default Web Site'
+          #     Package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
         routeTraffic:
           steps:
           - script: echo routing traffic
