@@ -14,25 +14,52 @@ jobs:
     displayName: Build Maven Project
     steps:
     - task: Maven@3
+      displayName: 'Maven Package'
       inputs:
         mavenPomFile: 'pom.xml'
-        mavenOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.8'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: 'package'
+    - task: CopyFiles@2
+      displayName: 'Copy Files to artifact staging directory'
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)'
+        Contents: '**/target/*.?(war|jar)'
+        TargetFolder: $(Build.ArtifactStagingDirectory)
+    - upload: $(Build.ArtifactStagingDirectory)
+      artifact: drop
 
  
   - deployment: VMDeploy
     displayName: web
+  # Use `dependsOn` if you are including the deployment job in the same pipeline with the Job to Build
+    dependsOn: Build  
     environment:
       name:  VMenv
       resourceType: VirtualMachine
       tags: web
     strategy:
-      runOnce:
+      rolling:
+        maxParallel: 2  #for percentages, mention as x%
+        preDeploy:
+          steps:
+          - download: current
+            artifact: drop
+          - script: echo initialize, cleanup, backup, install certs
         deploy:
           steps:
-          - script: echo my first VM deployment, yet to deploy Java
+          - task: IISWebAppDeploymentOnMachineGroup@0
+            displayName: 'Deploy application to Website'
+            inputs:
+              WebSiteName: 'Default Web Site'
+              Package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
+        routeTraffic:
+          steps:
+          - script: echo routing traffic
+        postRouteTraffic:
+          steps:
+          - script: echo health check post-route traffic
+        on:
+          failure:
+            steps:
+            - script: echo Restore from backup! This is on failure
+          success:
+            steps:
+            - script: echo Notify! This is on success
